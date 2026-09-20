@@ -79,7 +79,8 @@ Environment variables (`.env.example`):
 
 | Key | Notes |
 |---|---|
-| `DATABASE_URL` | Neon **pooled** connection string, with `sslmode=require` |
+| `DATABASE_URL` | Neon **pooled** connection string, with `sslmode=require` (used by the app) |
+| `DIRECT_DATABASE_URL` | Neon **direct** connection string (same host without `-pooler`), used only by `prisma migrate` / seed. Optional: the Vercel build derives it from `DATABASE_URL` when unset. Migrations cannot run through the pooler (advisory-lock timeout, error P1002). |
 | `NEXTAUTH_SECRET` | `openssl rand -base64 32` |
 | `NEXTAUTH_URL` | `http://localhost:3000` locally, production URL on Vercel; also used for links in emails |
 | `AWS_ENDPOINT_URL_S3`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION` | Neon Object Storage credential (Neon console → Storage) |
@@ -95,7 +96,8 @@ Useful scripts: `scripts/db-check.mjs` (row counts), `scripts/storage-check.mjs`
 1. Push to GitHub, import the repo into Vercel.
 2. Create a **Neon** project with a database and an **Object Storage** bucket (set it to private); create a storage credential.
 3. Set all env vars from `.env.example` for Production and Preview (`NEXTAUTH_URL` = the deployed URL).
-4. Deploy. The `vercel-build` script runs `prisma migrate deploy && prisma db seed && next build`
+4. Deploy. The `vercel-build` script (`scripts/vercel-build.mjs`) runs `prisma migrate deploy`, `prisma db seed`
+   and `next build`, using the direct database connection for the migration step
    (the seed is idempotent: it only creates missing milestones and skips the admin if one exists).
 5. Log in as the bootstrap admin and **change the password immediately** (the app forces this).
 
