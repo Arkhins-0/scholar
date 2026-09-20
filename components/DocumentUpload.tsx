@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { Check, FileText, Paperclip, Trash2, Upload } from "lucide-react";
 import { ALLOWED_UPLOAD_TYPES, MAX_UPLOAD_BYTES, formatBytes, uploadFile } from "@/lib/upload-client";
 import { fmtDate } from "@/lib/format";
+import Alert from "@/components/Alert";
 
 type Doc = { id: string; fileName: string; size: number; uploadedAt: string };
 
@@ -72,8 +73,8 @@ export default function DocumentUpload({
       <div className="box-header">
         <div className="flex items-center gap-3">
           <span
-            className={`flex h-7 w-7 items-center justify-center border ${
-              satisfied ? "border-success/40 bg-success/10 text-success" : "border-line bg-surface text-faint"
+            className={`flex h-8 w-8 items-center justify-center rounded-full ${
+              satisfied ? "bg-success/15 text-success" : "bg-line/50 text-muted"
             }`}
           >
             {satisfied ? <Check size={15} /> : <FileText size={15} />}
@@ -100,7 +101,13 @@ export default function DocumentUpload({
         </div>
       )}
 
-      {error && <p className="flash-error border-x-0 border-t-0">{error}</p>}
+      {error && (
+        <div className="px-4 pt-3">
+          <Alert tone="error" title="Upload failed" dismissible>
+            {error}
+          </Alert>
+        </div>
+      )}
 
       {docs.length === 0 ? (
         <p className="px-4 py-3 text-sm text-faint">Nothing uploaded yet.</p>

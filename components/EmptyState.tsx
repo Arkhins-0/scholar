@@ -14,7 +14,7 @@ export default function EmptyState({
 }) {
   return (
     <div className="blankslate">
-      <span className="flex h-10 w-10 items-center justify-center border border-line bg-elevated text-muted">
+      <span className="flex h-12 w-12 items-center justify-center rounded-full bg-elevated text-muted">
         <Icon size={20} />
       </span>
       <h3 className="mt-1 text-sm font-semibold">{title}</h3>

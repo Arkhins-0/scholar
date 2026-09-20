@@ -4,8 +4,8 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { AlertCircle } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import Alert from "@/components/Alert";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -44,10 +44,9 @@ export default function LoginPage() {
     >
       <form onSubmit={onSubmit} className="space-y-4">
         {error && (
-          <p className="flash-error">
-            <AlertCircle size={16} className="mt-0.5 shrink-0 text-danger" />
+          <Alert tone="error" title="Sign in failed" dismissible>
             {error}
-          </p>
+          </Alert>
         )}
         <div>
           <label className="label" htmlFor="email">

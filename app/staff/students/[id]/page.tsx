@@ -55,7 +55,7 @@ export default async function StaffStudentPage({ params }: { params: { id: strin
 
       <div className="pagehead">
         <div className="flex items-start gap-3">
-          <span className="flex h-11 w-11 shrink-0 items-center justify-center bg-fg text-lg font-bold text-bg">
+          <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-fg text-lg font-bold text-bg">
             {student.user.name.trim().charAt(0).toUpperCase()}
           </span>
           <div className="min-w-0">

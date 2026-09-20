@@ -58,7 +58,7 @@ export default async function StaffDashboard() {
               <div className={`display text-3xl tabular-nums ${t.highlight ? "text-attention" : ""}`}>{t.value}</div>
               <div className="mt-1 text-sm text-muted">{t.label}</div>
             </div>
-            <span className="flex h-8 w-8 items-center justify-center border border-line bg-elevated text-muted">
+            <span className={`flex h-9 w-9 items-center justify-center rounded-full ${t.highlight ? "bg-attention/15 text-attention" : "bg-accent/10 text-accent"}`}>
               <t.icon size={16} />
             </span>
           </div>

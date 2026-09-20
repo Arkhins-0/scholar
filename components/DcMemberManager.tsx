@@ -4,6 +4,7 @@ import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Building2, Mail, Pencil, Power, Trash2, UserPlus, Users, X } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
+import Alert from "@/components/Alert";
 
 export type DcMemberRow = {
   id: string;
@@ -50,8 +51,12 @@ function EditRow({ member, onDone }: { member: DcMemberRow; onDone: () => void }
   }
 
   return (
-    <form onSubmit={save} className="grid gap-3 border border-line bg-elevated p-4 sm:grid-cols-2">
-      {error && <p className="flash-error sm:col-span-2">{error}</p>}
+    <form onSubmit={save} className="grid gap-3 rounded-lg border border-line bg-elevated p-4 sm:grid-cols-2">
+      {error && (
+        <Alert tone="error" title="Update failed" className="sm:col-span-2">
+          {error}
+        </Alert>
+      )}
       <div>
         <label className="label">Name</label>
         <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -145,7 +150,11 @@ export default function DcMemberManager({ members }: { members: DcMemberRow[] })
           <span className="text-xs text-muted">Examiners and experts that supervisors assign to committees.</span>
         </div>
         <div className="box-body space-y-4">
-          {error && <p className="flash-error">{error}</p>}
+          {error && (
+            <Alert tone="error" title="Could not add the member" dismissible>
+              {error}
+            </Alert>
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="label">Full name</label>

@@ -72,7 +72,7 @@ export default async function AdminDashboard() {
               <div className="mt-1 text-sm font-semibold">{q.label}</div>
               <div className="text-xs text-muted">{q.desc}</div>
             </div>
-            <span className="flex h-8 w-8 items-center justify-center border border-line bg-elevated text-muted transition-colors group-hover:border-fg group-hover:text-fg">
+            <span className={`flex h-9 w-9 items-center justify-center rounded-full transition-colors ${q.count > 0 ? "bg-attention/15 text-attention" : "bg-accent/10 text-accent"}`}>
               <q.icon size={16} />
             </span>
           </Link>
@@ -95,8 +95,8 @@ export default async function AdminDashboard() {
                   <Link href={`/admin/students?stage=${stage}`} className="mono text-xs text-muted hover:text-accent hover:underline">
                     {stage}
                   </Link>
-                  <span className="h-4 bg-elevated">
-                    <span className="block h-full bg-accent" style={{ width: `${(n / maxStage) * 100}%` }} />
+                  <span className="h-3 overflow-hidden rounded-full bg-elevated">
+                    <span className="block h-full rounded-full bg-accent" style={{ width: `${(n / maxStage) * 100}%` }} />
                   </span>
                   <span className="text-right tabular-nums">{n}</span>
                 </li>

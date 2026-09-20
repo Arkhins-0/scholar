@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, Building2, Check, CheckCircle2, UserCog, UsersRound } from "lucide-react";
+import { Building2, Check, UserCog, UsersRound } from "lucide-react";
+import Alert from "@/components/Alert";
 
 type Option = { id: string; name: string; detail: string };
 
@@ -77,16 +78,14 @@ export default function CommitteeForm({
   return (
     <div className="space-y-5">
       {error && (
-        <p className="flash-error">
-          <AlertCircle size={16} className="mt-0.5 shrink-0 text-danger" />
+        <Alert tone="error" title="Could not save" dismissible>
           {error}
-        </p>
+        </Alert>
       )}
       {notice && (
-        <p className="flash-success">
-          <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-success" />
+        <Alert tone="success" title="Saved" dismissible>
           {notice}
-        </p>
+        </Alert>
       )}
 
       <div>
@@ -101,9 +100,11 @@ export default function CommitteeForm({
         </div>
 
         {dcPool.length === 0 ? (
-          <p className="flash-info">No DC members in the pool yet. Ask the R&amp;D section to add members on the DC Members page.</p>
+          <Alert tone="info" title="No DC members in the pool yet">
+            Ask the R&amp;D section to add examiners on the DC members page; they will appear here.
+          </Alert>
         ) : (
-          <div className="grid gap-px border border-line bg-line sm:grid-cols-2">
+          <div className="grid gap-px overflow-hidden rounded-lg border border-line bg-line sm:grid-cols-2">
             {dcPool.map((m) => {
               const checked = dcIds.includes(m.id);
               return (
@@ -117,7 +118,7 @@ export default function CommitteeForm({
                   }`}
                 >
                   <span
-                    className={`flex h-4 w-4 shrink-0 items-center justify-center border ${
+                    className={`flex h-4 w-4 shrink-0 items-center justify-center rounded-sm border ${
                       checked ? "border-accent bg-accent text-white" : "border-faint bg-bg"
                     }`}
                   >

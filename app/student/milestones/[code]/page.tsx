@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { AlertTriangle, ArrowLeft, CheckCircle2, Lock, XCircle } from "lucide-react";
+import { AlertTriangle, ArrowLeft, CheckCircle2, Lock } from "lucide-react";
+import Alert from "@/components/Alert";
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/authz";
 import { canOpenMilestone } from "@/lib/gating";
@@ -83,18 +84,15 @@ export default async function MilestonePage({ params }: { params: { code: string
       <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <div className="space-y-6">
           {wasRejected && (
-            <div className="flash-error items-start p-4">
-              <XCircle size={18} className="mt-0.5 shrink-0 text-danger" />
-              <div className="min-w-0">
-                <div className="text-sm font-semibold">
-                  Returned by {application.status === "SUPERVISOR_REJECTED" ? "your supervisor" : "the R&D section"}
-                </div>
-                <p className="mt-1 whitespace-pre-wrap text-sm">
-                  {application.status === "SUPERVISOR_REJECTED" ? application.supervisorRemarks : application.rndRemarks}
-                </p>
-                <p className="mt-2 text-xs text-muted">Update your documents below and resubmit.</p>
-              </div>
-            </div>
+            <Alert
+              tone="error"
+              title={`Returned by ${application.status === "SUPERVISOR_REJECTED" ? "your supervisor" : "the R&D section"}`}
+            >
+              <p className="whitespace-pre-wrap text-fg">
+                {application.status === "SUPERVISOR_REJECTED" ? application.supervisorRemarks : application.rndRemarks}
+              </p>
+              <p className="mt-1.5 text-xs">Update your documents below and resubmit.</p>
+            </Alert>
           )}
 
           <section className="space-y-3">

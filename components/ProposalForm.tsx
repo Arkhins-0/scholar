@@ -2,7 +2,8 @@
 
 import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, CheckCircle2, FileText, Lock, Paperclip, Upload } from "lucide-react";
+import { FileText, Lock, Paperclip, Upload } from "lucide-react";
+import Alert from "@/components/Alert";
 import { proposalSchema } from "@/lib/schemas";
 import { RESEARCH_DOMAINS } from "@/lib/domains";
 import { MAX_UPLOAD_BYTES, uploadFile } from "@/lib/upload-client";
@@ -97,22 +98,19 @@ export default function ProposalForm({
 
       <div className="box-body space-y-4">
         {locked && (
-          <p className="flash-info">
-            <Lock size={15} className="mt-0.5 shrink-0 text-accent" />
+          <Alert tone="info" title="Proposal locked">
             A supervisor has been allocated, so the proposal is now read-only.
-          </p>
+          </Alert>
         )}
         {error && (
-          <p className="flash-error">
-            <AlertCircle size={15} className="mt-0.5 shrink-0 text-danger" />
+          <Alert tone="error" title="Could not save" dismissible>
             {error}
-          </p>
+          </Alert>
         )}
         {notice && (
-          <p className="flash-success">
-            <CheckCircle2 size={15} className="mt-0.5 shrink-0 text-success" />
+          <Alert tone="success" title="Saved" dismissible>
             {notice}
-          </p>
+          </Alert>
         )}
 
         <div>
@@ -144,7 +142,7 @@ export default function ProposalForm({
           </select>
         </div>
 
-        <div className="border border-line">
+        <div className="rounded-lg border border-line">
           <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
             <div className="min-w-0">
               <div className="text-sm font-semibold">Proposed work (PDF)</div>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AuthLayout from "@/components/AuthLayout";
+import Alert from "@/components/Alert";
 import ResetPasswordForm from "./ResetPasswordForm";
 
 export const metadata = { title: "Choose a new password" };
@@ -25,7 +26,9 @@ export default function ResetPasswordPage({ searchParams }: { searchParams: { to
         <ResetPasswordForm token={token} />
       ) : (
         <div className="space-y-3">
-          <p className="flash-error">This reset link is missing its token. Open the link from your email again.</p>
+          <Alert tone="error" title="Invalid reset link">
+            This link is missing its token. Open the link from your email again, or request a new one.
+          </Alert>
           <Link href="/forgot-password" className="btn-default w-full">
             Request a new link
           </Link>

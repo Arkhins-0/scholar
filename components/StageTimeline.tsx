@@ -27,8 +27,8 @@ export default function StageTimeline({ stages }: { stages: TimelineStage[] }) {
           <span>
             {doneCount} of {stages.length} stages complete
           </span>
-          <span className="h-1.5 w-28 bg-elevated" aria-hidden>
-            <span className="block h-full bg-success" style={{ width: `${pct}%` }} />
+          <span className="h-1.5 w-28 overflow-hidden rounded-full bg-elevated" aria-hidden>
+            <span className="block h-full rounded-full bg-success" style={{ width: `${pct}%` }} />
           </span>
         </div>
       </div>
@@ -42,12 +42,12 @@ export default function StageTimeline({ stages }: { stages: TimelineStage[] }) {
               }`}
             >
               <span
-                className={`flex h-7 w-7 shrink-0 items-center justify-center border text-xs font-semibold tabular-nums ${
+                className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold tabular-nums ${
                   s.done
-                    ? "border-success bg-success text-white"
+                    ? "bg-success text-white"
                     : locked
-                      ? "border-line bg-elevated text-faint"
-                      : "border-fg bg-surface text-fg"
+                      ? "bg-elevated text-faint"
+                      : "bg-accent/15 text-accent ring-1 ring-inset ring-accent/40"
                 }`}
                 aria-hidden
               >

@@ -46,7 +46,7 @@ export default function AuthLayout({
         <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/25" />
         <div className="relative flex h-full flex-col justify-between p-10 text-white">
           <div className="flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center bg-white text-black">
+            <span className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-md bg-white text-black">
               <Logo size={36} className="[&_rect]:fill-white [&_path]:fill-black" />
             </span>
             <div>

@@ -2,8 +2,9 @@
 
 import { Fragment, useState } from "react";
 import { useRouter } from "next/navigation";
-import { KeyRound, Pencil, ShieldAlert, UserPlus, Users, X } from "lucide-react";
+import { KeyRound, Pencil, UserPlus, Users, X } from "lucide-react";
 import EmptyState from "@/components/EmptyState";
+import Alert from "@/components/Alert";
 
 export type StaffRow = {
   id: string;
@@ -47,8 +48,12 @@ function StaffEditRow({ staff, onDone }: { staff: StaffRow; onDone: () => void }
   }
 
   return (
-    <form onSubmit={save} className="grid gap-3 border border-line bg-elevated p-4 sm:grid-cols-2">
-      {error && <p className="flash-error sm:col-span-2">{error}</p>}
+    <form onSubmit={save} className="grid gap-3 rounded-lg border border-line bg-elevated p-4 sm:grid-cols-2">
+      {error && (
+        <Alert tone="error" title="Update failed" className="sm:col-span-2">
+          {error}
+        </Alert>
+      )}
       <div>
         <label className="label">Name</label>
         <input className="input" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
@@ -132,7 +137,11 @@ export default function StaffManager({ staff }: { staff: StaffRow[] }) {
           <span className="text-xs text-muted">A temporary password is emailed and shown once.</span>
         </div>
         <div className="box-body space-y-4">
-          {error && <p className="flash-error">{error}</p>}
+          {error && (
+            <Alert tone="error" title="Could not create the account" dismissible>
+              {error}
+            </Alert>
+          )}
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
               <label className="label">Full name</label>
@@ -156,14 +165,12 @@ export default function StaffManager({ staff }: { staff: StaffRow[] }) {
             </div>
           </div>
           {createdPassword && (
-            <div className="flex items-start gap-2 border border-attention/40 bg-attention/10 p-4 text-sm">
-              <ShieldAlert size={18} className="mt-0.5 shrink-0 text-attention" />
-              <div>
-                <p className="font-semibold">Temporary password for {createdPassword.email}. Shown only once:</p>
-                <p className="mono mt-1 text-base">{createdPassword.password}</p>
-                <p className="mt-1 text-xs text-muted">They must change it on first login.</p>
-              </div>
-            </div>
+            <Alert tone="warn" title={`Temporary password for ${createdPassword.email}`} dismissible>
+              <p>Shown only once. It has also been emailed; they must change it on first login.</p>
+              <p className="mono mt-2 inline-block rounded-md border border-line bg-surface px-2 py-1 text-base text-fg">
+                {createdPassword.password}
+              </p>
+            </Alert>
           )}
         </div>
         <div className="box-footer flex justify-end">
@@ -231,8 +238,8 @@ export default function StaffManager({ staff }: { staff: StaffRow[] }) {
                           </button>
                         </div>
                         {resetPassword?.id === s.id && (
-                          <p className="mt-1 border border-attention/40 bg-attention/10 px-2 py-1 text-right text-xs">
-                            New temporary password: <span className="mono">{resetPassword.password}</span>
+                          <p className="mt-1 rounded-md border border-attention/30 bg-attention/[0.08] px-2 py-1 text-right text-xs">
+                            New temporary password: <span className="mono text-fg">{resetPassword.password}</span>
                           </p>
                         )}
                       </td>

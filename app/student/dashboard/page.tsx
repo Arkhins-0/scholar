@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { ArrowRight, GraduationCap, Sparkles, UserCog, UsersRound } from "lucide-react";
+import { ArrowRight, UserCog, UsersRound } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getSessionUser } from "@/lib/authz";
 import PageHeader from "@/components/PageHeader";
+import Alert from "@/components/Alert";
 import StageTimeline, { type TimelineStage } from "@/components/StageTimeline";
 import { MILESTONE_CODES, previousMilestone, type MilestoneCode } from "@/lib/milestones";
 import { fmtDate } from "@/lib/format";
@@ -126,30 +127,25 @@ export default async function StudentDashboard() {
       <div className="grid gap-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
         <div className="space-y-6">
           {completed && (
-            <div className="flash-success items-center gap-3 p-4">
-              <GraduationCap size={22} className="shrink-0 text-success" />
-              <div>
-                <div className="display text-lg">Degree completed</div>
-                <p className="text-sm text-muted">
-                  Your degree was issued on <strong className="text-fg">{fmtDate(degreeApp?.degreeIssuedAt)}</strong>. Congratulations, Doctor.
-                </p>
-              </div>
-            </div>
+            <Alert tone="success" title="Degree completed">
+              Your degree was issued on <strong className="text-fg">{fmtDate(degreeApp?.degreeIssuedAt)}</strong>. Congratulations, Doctor.
+            </Alert>
           )}
 
           {action && (
-            <div className="flash-warn items-start gap-3 p-4">
-              <Sparkles size={18} className="mt-0.5 shrink-0 text-attention" />
-              <div className="min-w-0">
-                <div className="section-title">Next step</div>
-                <p className="mt-0.5 text-sm">{action.text}</p>
-                {action.href && (
-                  <Link href={action.href} className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-accent hover:underline">
-                    Go there <ArrowRight size={14} />
+            <Alert
+              tone={action.href ? "warn" : "info"}
+              title="Next step"
+              actions={
+                action.href && (
+                  <Link href={action.href} className="btn-default btn-sm">
+                    Go there <ArrowRight size={13} />
                   </Link>
-                )}
-              </div>
-            </div>
+                )
+              }
+            >
+              {action.text}
+            </Alert>
           )}
 
           <StageTimeline stages={stages} />

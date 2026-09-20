@@ -11,16 +11,16 @@ const config: Config = {
   darkMode: "class",
   content: ["./components/**/*.{js,ts,jsx,tsx,mdx}", "./app/**/*.{js,ts,jsx,tsx,mdx}"],
   theme: {
-    // No rounded corners anywhere except `rounded-full` (avatars, dots).
+    // Restrained radii: controls 6px, boxes 10px, alerts/cards 12px.
     borderRadius: {
       none: "0",
-      sm: "0",
-      DEFAULT: "0",
-      md: "0",
-      lg: "0",
-      xl: "0",
-      "2xl": "0",
-      "3xl": "0",
+      sm: "4px",
+      DEFAULT: "6px",
+      md: "6px",
+      lg: "10px",
+      xl: "12px",
+      "2xl": "16px",
+      "3xl": "20px",
       full: "9999px",
     },
     extend: {

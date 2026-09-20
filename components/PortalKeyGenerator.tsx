@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Copy, KeyRound, ShieldAlert } from "lucide-react";
+import { Check, Copy, KeyRound } from "lucide-react";
+import Alert from "@/components/Alert";
 
 export default function PortalKeyGenerator() {
   const router = useRouter();
@@ -86,24 +87,26 @@ export default function PortalKeyGenerator() {
       </form>
 
       {keys.length > 0 && (
-        <div className="border-t border-attention/40 bg-attention/10 p-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <p className="flex items-center gap-2 text-sm font-semibold">
-              <ShieldAlert size={16} className="shrink-0 text-attention" />
-              Copy these now. They are shown once and cannot be recovered.
-            </p>
-            <button type="button" onClick={copyAll} className="btn-default shrink-0">
-              {copied ? <Check size={15} /> : <Copy size={15} />}
-              {copied ? "Copied" : "Copy all"}
-            </button>
-          </div>
-          <ul className="mt-3 divide-y divide-line border border-line bg-surface">
-            {keys.map((k) => (
-              <li key={k} className="mono px-3 py-1.5">
-                {k}
-              </li>
-            ))}
-          </ul>
+        <div className="border-t border-line p-4">
+          <Alert
+            tone="warn"
+            title="Copy these keys now"
+            actions={
+              <button type="button" onClick={copyAll} className="btn-default btn-sm">
+                {copied ? <Check size={13} /> : <Copy size={13} />}
+                {copied ? "Copied" : "Copy all"}
+              </button>
+            }
+          >
+            <p>They are shown once and cannot be recovered. Hand each key to one scholar.</p>
+            <ul className="mt-3 divide-y divide-line overflow-hidden rounded-md border border-line bg-surface">
+              {keys.map((k) => (
+                <li key={k} className="mono px-3 py-1.5 text-fg">
+                  {k}
+                </li>
+              ))}
+            </ul>
+          </Alert>
         </div>
       )}
     </div>

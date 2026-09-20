@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AlertCircle, CheckCircle2 } from "lucide-react";
+import Alert from "@/components/Alert";
 import { resetPasswordSchema } from "@/lib/schemas";
 
 export default function ResetPasswordForm({ token }: { token: string }) {
@@ -42,10 +42,9 @@ export default function ResetPasswordForm({ token }: { token: string }) {
   if (done) {
     return (
       <div className="space-y-3">
-        <p className="flash-success">
-          <CheckCircle2 size={16} className="mt-0.5 shrink-0 text-success" />
+        <Alert tone="success" title="Password changed">
           Your password has been changed. You can sign in with it now.
-        </p>
+        </Alert>
         <Link href="/login" className="btn-primary w-full">
           Go to sign in
         </Link>
@@ -56,10 +55,9 @@ export default function ResetPasswordForm({ token }: { token: string }) {
   return (
     <form onSubmit={onSubmit} className="space-y-4">
       {error && (
-        <p className="flash-error">
-          <AlertCircle size={16} className="mt-0.5 shrink-0 text-danger" />
+        <Alert tone="error" title="Could not reset the password" dismissible>
           {error}
-        </p>
+        </Alert>
       )}
       <div>
         <label className="label" htmlFor="password">

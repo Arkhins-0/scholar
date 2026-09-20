@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { AlertCircle, ThumbsUp, XCircle } from "lucide-react";
+import { ThumbsUp, XCircle } from "lucide-react";
+import Alert from "@/components/Alert";
 
 /** Approve/reject form used by both Supervisor and R&D reviews. */
 export default function ReviewForm({ url }: { url: string }) {
@@ -40,7 +41,7 @@ export default function ReviewForm({ url }: { url: string }) {
       type="button"
       onClick={() => setDecision(value)}
       aria-pressed={decision === value}
-      className={`inline-flex h-8 items-center gap-2 border px-3 text-sm font-medium transition-colors ${
+      className={`inline-flex h-8 items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors ${
         decision === value ? tone : "border-line bg-surface text-muted hover:text-fg"
       }`}
     >
@@ -49,12 +50,12 @@ export default function ReviewForm({ url }: { url: string }) {
   );
 
   return (
-    <form onSubmit={onSubmit} className="space-y-3 border border-line bg-elevated p-4">
+    <form onSubmit={onSubmit} className="space-y-3 rounded-lg border border-line bg-elevated p-4">
       <div className="flex flex-wrap items-center gap-3">
         <span className="text-sm font-semibold">Decision</span>
-        <div className="flex -space-x-px">
-          {segment("APPROVE", ThumbsUp, "Approve", "border-success bg-success/10 text-success z-10")}
-          {segment("REJECT", XCircle, "Return with remarks", "border-danger bg-danger/10 text-danger z-10")}
+        <div className="flex flex-wrap gap-2">
+          {segment("APPROVE", ThumbsUp, "Approve", "border-success/60 bg-success/10 text-success")}
+          {segment("REJECT", XCircle, "Return with remarks", "border-danger/60 bg-danger/10 text-danger")}
         </div>
       </div>
       <textarea
@@ -65,10 +66,9 @@ export default function ReviewForm({ url }: { url: string }) {
         maxLength={5000}
       />
       {error && (
-        <p className="flash-error">
-          <AlertCircle size={15} className="mt-0.5 shrink-0 text-danger" />
+        <Alert tone="error" title="Review not submitted" dismissible>
           {error}
-        </p>
+        </Alert>
       )}
       <div className="flex justify-end">
         <button type="submit" disabled={busy} className={decision === "APPROVE" ? "btn-primary" : "btn-danger"}>

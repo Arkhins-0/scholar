@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { AlertCircle, ShieldAlert } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import Alert from "@/components/Alert";
 import { changePasswordSchema } from "@/lib/schemas";
 
 export default function ChangePasswordPage() {
@@ -60,16 +60,14 @@ export default function ChangePasswordPage() {
     >
       <form onSubmit={onSubmit} className="space-y-4">
         {forced && (
-          <p className="flash-warn">
-            <ShieldAlert size={16} className="mt-0.5 shrink-0 text-attention" />
-            Your account has a temporary password. Set a new one to continue.
-          </p>
+          <Alert tone="warn" title="Temporary password in use">
+            Your account was issued a temporary password. Set a new one to continue.
+          </Alert>
         )}
         {error && (
-          <p className="flash-error">
-            <AlertCircle size={16} className="mt-0.5 shrink-0 text-danger" />
+          <Alert tone="error" title="Update failed" dismissible>
             {error}
-          </p>
+          </Alert>
         )}
         <div>
           <label className="label" htmlFor="current">

@@ -16,10 +16,10 @@ type StepState = "done" | "current" | "rejected" | "pending";
 type Step = { label: string; state: StepState; detail?: string; remarks?: string | null };
 
 const DOT: Record<StepState, string> = {
-  done: "border-success bg-success text-white",
-  current: "border-accent bg-accent text-white",
-  rejected: "border-danger bg-danger text-white",
-  pending: "border-line bg-elevated text-faint",
+  done: "bg-success text-white",
+  current: "bg-accent text-white",
+  rejected: "bg-danger text-white",
+  pending: "bg-elevated text-faint ring-1 ring-inset ring-line",
 };
 
 /** Vertical status tracker for one milestone application (PR-timeline style). */
@@ -81,7 +81,7 @@ export default function ApplicationTracker({ app, isDegree }: { app: App; isDegr
         <li key={step.label} className="relative flex gap-3 pb-6 last:pb-0">
           {i < steps.length - 1 && <span className="absolute left-[11px] top-6 h-full w-px bg-line" aria-hidden />}
           <span
-            className={`relative z-10 flex h-6 w-6 shrink-0 items-center justify-center border text-xs font-bold ${DOT[step.state]}`}
+            className={`relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full text-xs font-bold ${DOT[step.state]}`}
           >
             {step.state === "done" ? <Check size={13} /> : step.state === "rejected" ? <X size={13} /> : i + 1}
           </span>
@@ -89,7 +89,7 @@ export default function ApplicationTracker({ app, isDegree }: { app: App; isDegr
             <div className={`text-sm font-semibold ${step.state === "pending" ? "text-faint" : ""}`}>{step.label}</div>
             {step.detail && <div className="text-xs text-muted">{step.detail}</div>}
             {step.remarks && (
-              <p className="mt-2 whitespace-pre-wrap border border-danger/40 bg-danger/10 p-2.5 text-xs text-fg">
+              <p className="mt-2 whitespace-pre-wrap rounded-lg border border-danger/25 bg-danger/[0.07] p-2.5 text-xs text-fg dark:bg-danger/[0.12]">
                 {step.remarks}
               </p>
             )}

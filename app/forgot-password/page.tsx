@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { AlertCircle, MailCheck } from "lucide-react";
 import AuthLayout from "@/components/AuthLayout";
+import Alert from "@/components/Alert";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -45,12 +45,9 @@ export default function ForgotPasswordPage() {
     >
       {sent ? (
         <div className="space-y-3">
-          <p className="flash-success">
-            <MailCheck size={16} className="mt-0.5 shrink-0 text-success" />
-            <span>
-              If an account exists for <strong>{email}</strong>, a reset link is on its way. The link is valid for one hour.
-            </span>
-          </p>
+          <Alert tone="success" title="Check your inbox">
+            If an account exists for <strong className="text-fg">{email}</strong>, a reset link is on its way. The link is valid for one hour.
+          </Alert>
           <p className="text-sm text-muted">Did not get it? Check your spam folder, or try again in a few minutes.</p>
           <button type="button" className="btn-default w-full" onClick={() => setSent(false)}>
             Send another link
@@ -59,10 +56,9 @@ export default function ForgotPasswordPage() {
       ) : (
         <form onSubmit={onSubmit} className="space-y-4">
           {error && (
-            <p className="flash-error">
-              <AlertCircle size={16} className="mt-0.5 shrink-0 text-danger" />
+            <Alert tone="error" title="Something went wrong" dismissible>
               {error}
-            </p>
+            </Alert>
           )}
           <div>
             <label className="label" htmlFor="email">

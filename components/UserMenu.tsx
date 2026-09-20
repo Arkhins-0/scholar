@@ -38,19 +38,19 @@ export default function UserMenu({ name, email, roleLabel }: { name: string; ema
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="flex h-8 items-center gap-2 border border-line bg-surface pl-1 pr-2 text-sm hover:bg-elevated"
+        className="flex h-8 items-center gap-2 rounded-md border border-line bg-surface pl-1 pr-2 text-sm shadow-sm hover:bg-elevated"
       >
-        <span className="flex h-6 w-6 items-center justify-center bg-fg text-[11px] font-bold text-bg">{initials(name)}</span>
+        <span className="flex h-6 w-6 items-center justify-center rounded-full bg-fg text-[11px] font-bold text-bg">{initials(name)}</span>
         <span className="hidden max-w-[10rem] truncate font-medium sm:inline">{name}</span>
         <ChevronDown size={14} className="text-muted" />
       </button>
 
       {open && (
-        <div role="menu" className="absolute right-0 z-50 mt-1 w-64 border border-line bg-surface shadow-menu animate-fade-in">
+        <div role="menu" className="absolute right-0 z-50 mt-1 w-64 overflow-hidden rounded-lg border border-line bg-surface shadow-menu animate-fade-in">
           <div className="border-b border-line px-3 py-2.5">
             <div className="truncate text-sm font-semibold">{name}</div>
             <div className="truncate text-xs text-muted">{email}</div>
-            <div className="mt-1.5 inline-flex border border-line bg-elevated px-1.5 text-[11px] font-medium text-muted">{roleLabel}</div>
+            <div className="mt-1.5 inline-flex rounded-md border border-line bg-elevated px-1.5 text-[11px] font-medium text-muted">{roleLabel}</div>
           </div>
           <div className="py-1">
             <Link

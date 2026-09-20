@@ -16,7 +16,7 @@ export default function PageHeader({
     <div className="pagehead">
       <div className="flex min-w-0 items-start gap-3">
         {Icon && (
-          <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center border border-line bg-elevated text-muted">
+          <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent/10 text-accent">
             <Icon size={18} />
           </span>
         )}
