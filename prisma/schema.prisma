@@ -1,0 +1,214 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  STUDENT
+  STAFF
+  RND_ADMIN
+}
+
+enum ApplicationStatus {
+  DRAFT
+  SUBMITTED
+  SUPERVISOR_APPROVED
+  SUPERVISOR_REJECTED
+  RND_APPROVED
+  RND_REJECTED
+  MEETING_COMPLETED // unlocks the next milestone
+  DEGREE_ISSUED // only used on the DEGREE milestone
+}
+
+enum SupervisorRequestStatus {
+  NOT_REQUESTED
+  PENDING
+  ALLOCATED
+}
+
+model User {
+  id           String   @id @default(uuid()) @db.Uuid
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         UserRole
+  phone        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // security hardening
+  mustChangePassword Boolean   @default(false)
+  failedLoginCount   Int       @default(0)
+  lockedUntil        DateTime?
+
+  studentProfile      StudentProfile?
+  staffProfile        StaffProfile?
+  generatedKeys       PortalKey[]
+  passwordResetTokens PasswordResetToken[]
+}
+
+/// Single-use, time-limited tokens for the "forgot password" flow. Only the
+/// SHA-256 hash of the token is stored; the raw token travels in the email link.
+model PasswordResetToken {
+  id        String    @id @default(uuid()) @db.Uuid
+  userId    String    @db.Uuid
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId])
+}
+
+model PortalKey {
+  id String @id @default(uuid()) @db.Uuid
+  // Only a SHA-256 hash of the key is stored; the plaintext is shown once at generation time.
+  keyHash       String    @unique
+  keyPrefix     String // first characters, for identification in the admin list
+  isUsed        Boolean   @default(false)
+  generatedById String    @db.Uuid
+  generatedBy   User      @relation(fields: [generatedById], references: [id])
+  createdAt     DateTime  @default(now())
+  expiresAt     DateTime?
+
+  usedByStudent StudentProfile?
+}
+
+model StaffProfile {
+  id          String  @id @default(uuid()) @db.Uuid
+  userId      String  @unique @db.Uuid
+  user        User    @relation(fields: [userId], references: [id])
+  department  String?
+  designation String?
+
+  supervisingStudents   StudentProfile[] @relation("Supervisor")
+  coSupervisingStudents StudentProfile[] @relation("CoSupervisor")
+}
+
+/// Doctoral Committee member pool, curated by the R&D section. These are
+/// examiners/experts (often external) who never log in — they exist only so a
+/// supervisor can assign them to a student's committee. Kept fully separate
+/// from the Staff (supervisor) pool.
+model DcMember {
+  id          String   @id @default(uuid()) @db.Uuid
+  name        String
+  email       String?  @unique
+  department  String?
+  designation String?
+  affiliation String? // institution / organisation the member belongs to
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  memberships DcMembership[]
+}
+
+model StudentProfile {
+  id             String  @id @default(uuid()) @db.Uuid
+  userId         String  @unique @db.Uuid
+  user           User    @relation(fields: [userId], references: [id])
+  registrationNo String? @unique
+
+  portalKeyId String    @unique @db.Uuid
+  portalKey   PortalKey @relation(fields: [portalKeyId], references: [id])
+
+  title  String?
+  domain String?
+
+  // Proposed work is an uploaded PDF held in S3-compatible object storage and
+  // served only through the authenticated /api/students/[id]/proposal-document
+  // proxy. Only the object key is stored — never a URL.
+  proposalStorageKey  String?
+  proposalFileName    String?
+  proposalContentType String?
+  proposalSize        Int?
+
+  supervisorRequestStatus SupervisorRequestStatus @default(NOT_REQUESTED)
+  supervisorId            String?                 @db.Uuid
+  supervisor              StaffProfile?           @relation("Supervisor", fields: [supervisorId], references: [id])
+  coSupervisorId          String?                 @db.Uuid
+  coSupervisor            StaffProfile?           @relation("CoSupervisor", fields: [coSupervisorId], references: [id])
+
+  currentMilestoneCode String @default("PROPOSAL") // PROPOSAL, DC1, DC2, DC3, DC4, DEGREE, COMPLETED
+
+  dcMembers    DcMembership[]
+  applications MilestoneApplication[]
+
+  createdAt DateTime @default(now())
+}
+
+/// Join between a student's committee and a DcMember from the pool.
+model DcMembership {
+  id         String         @id @default(uuid()) @db.Uuid
+  studentId  String         @db.Uuid
+  student    StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  dcMemberId String         @db.Uuid
+  dcMember   DcMember       @relation(fields: [dcMemberId], references: [id], onDelete: Cascade)
+  assignedAt DateTime       @default(now())
+
+  @@unique([studentId, dcMemberId])
+}
+
+model Milestone {
+  id           String   @id @default(uuid()) @db.Uuid
+  code         String   @unique // DC1, DC2, DC3, DC4, DEGREE
+  name         String
+  sequence     Int
+  requiredDocs String[] // e.g. ["fee_receipt", "marksheet"]
+
+  applications MilestoneApplication[]
+}
+
+model MilestoneApplication {
+  id          String         @id @default(uuid()) @db.Uuid
+  studentId   String         @db.Uuid
+  student     StudentProfile @relation(fields: [studentId], references: [id])
+  milestoneId String         @db.Uuid
+  milestone   Milestone      @relation(fields: [milestoneId], references: [id])
+
+  status ApplicationStatus @default(DRAFT)
+
+  submittedAt          DateTime?
+  supervisorReviewedAt DateTime?
+  supervisorRemarks    String?
+  rndReviewedAt        DateTime?
+  rndRemarks           String?
+  meetingCompletedAt   DateTime? // R&D marks the DC meeting done -> unlocks next stage
+  degreeIssuedAt       DateTime? // only set on the DEGREE milestone
+
+  documents MilestoneDocument[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([studentId, milestoneId])
+}
+
+model MilestoneDocument {
+  id            String               @id @default(uuid()) @db.Uuid
+  applicationId String               @db.Uuid
+  application   MilestoneApplication @relation(fields: [applicationId], references: [id], onDelete: Cascade)
+  docType       String // fee_receipt, marksheet, dc1_report, paper_published_report, dc2_report, thesis_evaluation_report, dc4_report
+  // Object-storage key. Never sent to the browser; files are served through the
+  // authenticated /api/documents/[id] proxy.
+  storageKey  String
+  fileName    String
+  contentType String
+  size        Int
+  uploadedAt  DateTime @default(now())
+}
+
+model AuditLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  actorId    String?  @db.Uuid
+  action     String
+  entityType String
+  entityId   String
+  details    Json?
+  createdAt  DateTime @default(now())
+}
