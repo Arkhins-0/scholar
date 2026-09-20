@@ -70,7 +70,7 @@ export default function Shell({
       <header className="border-b border-line bg-header">
         <div className="mx-auto flex h-14 max-w-page items-center gap-3 px-4">
           <Link href={home} className="flex items-center gap-2.5" aria-label={`${APP_NAME} home`}>
-            <Logo size={30} />
+            <Logo size={36} />
             <span className="display text-[17px] leading-none">{APP_NAME}</span>
           </Link>
           <span className="hidden text-faint sm:inline" aria-hidden>
@@ -103,7 +103,7 @@ export default function Shell({
       <footer className="border-t border-line">
         <div className="mx-auto flex max-w-page flex-wrap items-center justify-between gap-2 px-4 py-5 text-xs text-muted">
           <span className="flex items-center gap-2">
-            <Logo size={16} />
+            <Logo size={22} />
             {APP_NAME} · {ORG_NAME}
           </span>
           <span>{APP_TAGLINE}</span>

@@ -1,17 +1,19 @@
-/** Square monogram: an open book. Inherits `currentColor` for the tile. */
+import Image from "next/image";
+
+/**
+ * The portal emblem (engraved cap, scroll and open book). Rendered from the
+ * pre-sized PNGs in public/images; the white background is part of the mark.
+ */
 export default function Logo({ size = 32, className = "" }: { size?: number; className?: string }) {
+  const src = size > 128 ? "/images/logo-512.png" : size > 64 ? "/images/logo-256.png" : "/images/logo-128.png";
   return (
-    <svg
+    <Image
+      src={src}
+      alt=""
       width={size}
       height={size}
-      viewBox="0 0 32 32"
-      aria-hidden
-      className={className}
-      style={{ color: "rgb(var(--fg))" }}
-    >
-      <rect width="32" height="32" rx="6" fill="currentColor" />
-      <path fill="rgb(var(--bg))" d="M6 9.5c3.2-1.6 6.3-1.6 9.2 0v13.2c-2.9-1.6-6-1.6-9.2 0z" />
-      <path fill="rgb(var(--bg))" d="M16.8 9.5c2.9-1.6 6-1.6 9.2 0v13.2c-3.2-1.6-6.3-1.6-9.2 0z" />
-    </svg>
+      className={`shrink-0 rounded-md bg-white ${className}`}
+      style={{ width: size, height: size }}
+    />
   );
 }

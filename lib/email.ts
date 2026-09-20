@@ -64,7 +64,7 @@ export function renderHtml(m: EmailMessage): string {
     <tr><td align="center">
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:560px;background:#ffffff;border:1px solid #d0d7de">
         <tr><td style="padding:18px 28px;border-bottom:1px solid #d0d7de;background:#f6f8fa">
-          <span style="display:inline-block;width:10px;height:10px;background:#1f2328;vertical-align:middle;margin-right:10px"></span>
+          <img src="${escapeHtml(appUrl("/images/logo-128.png"))}" width="40" height="40" alt="${APP_NAME}" style="display:inline-block;width:40px;height:40px;vertical-align:middle;margin-right:12px;border:1px solid #d0d7de;border-radius:6px;background:#ffffff">
           <span style="font-family:Georgia,'Times New Roman',serif;font-size:18px;font-weight:600;color:#1f2328;vertical-align:middle">${APP_NAME}</span>
           <span style="float:right;font-size:12px;color:#59636e;line-height:24px">${APP_TAGLINE}</span>
         </td></tr>
